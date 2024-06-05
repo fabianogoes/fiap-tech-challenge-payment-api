@@ -1,0 +1,19 @@
+# exclude any development-specific files
+.vscode/
+.idea/
+
+# exclude build artifacts
+bin/
+tmp/
+postgres/
+
+# exclude any development-specific files
+# *.env
+*.log
+*.out
+*.exe
+*.test
+db/
+
+# exclude any generated files
+*.jpg:Zone.Identifier
