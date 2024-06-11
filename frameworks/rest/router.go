@@ -17,10 +17,11 @@ func NewRouter(
 	router.GET("/health", Health)
 	router.GET("/env", Environment)
 
-	customers := router.Group("/payments")
+	payments := router.Group("/payments")
 	{
-		customers.GET("/:id", paymentHandler.GetPayment)
-		customers.POST("/", paymentHandler.CreatePayment)
+		payments.GET("/:id", paymentHandler.GetPayment)
+		payments.POST("/", paymentHandler.CreatePayment)
+		payments.POST("/:id/status", paymentHandler.UpdateStatus)
 	}
 
 	return &Router{

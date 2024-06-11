@@ -48,3 +48,17 @@ func (h *PaymentHandler) CreatePayment(c *gin.Context) {
 
 	c.JSON(http.StatusCreated, dto.ToPaymentResponse(payment))
 }
+
+func (h *PaymentHandler) UpdateStatus(c *gin.Context) {
+	id := c.Param("id")
+	status := c.Query("status")
+
+	payment, err := h.UseCase.UpdatePayment(id, status)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": err.Error(),
+		})
+	}
+
+	c.JSON(http.StatusOK, dto.ToPaymentResponse(payment))
+}
