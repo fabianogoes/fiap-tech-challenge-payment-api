@@ -1,6 +1,7 @@
 package rest
 
 import (
+	"github.com/fabianogoes/fiap-payment/frameworks/rest/payment"
 	"github.com/gin-gonic/gin"
 )
 
@@ -9,7 +10,7 @@ type Router struct {
 }
 
 func NewRouter(
-	paymentHandler *PaymentHandler,
+	paymentHandler *payment.PaymentHandler,
 ) (*Router, error) {
 	router := gin.Default()
 

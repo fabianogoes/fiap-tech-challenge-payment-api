@@ -17,7 +17,6 @@ type Config struct {
 	DBUser      string
 	DBPassword  string
 	APIVersion  string
-	TokenSecret string
 }
 
 func NewConfig() (*Config, error) {
@@ -25,14 +24,13 @@ func NewConfig() (*Config, error) {
 
 	config := &Config{
 		Environment: getEnv("APP_ENV", "development"),
-		AppPort:     getEnv("APP_PORT", ":8080"),
+		AppPort:     getEnv("APP_PORT", ":8010"),
 		DBHost:      getEnv("DB_HOST", "localhost"),
-		DBPort:      getEnv("DB_PORT", "5432"),
-		DBName:      getEnv("DB_DATABASE", "db"),
-		DBUser:      getEnv("DB_USERNAME", "usr"),
-		DBPassword:  getEnv("DB_PASSWORD", "pwd"),
-		APIVersion:  getEnv("API_VERSION", "2024.5.8.3"),
-		TokenSecret: getEnv("TOKEN_SECRET", "123"),
+		DBPort:      getEnv("DB_PORT", "27017"),
+		DBName:      getEnv("DB_DATABASE", "payment_db"),
+		DBUser:      getEnv("DB_USERNAME", "root"),
+		DBPassword:  getEnv("DB_PASSWORD", "pass"),
+		APIVersion:  getEnv("API_VERSION", "1.0"),
 	}
 
 	printConfig(config)
@@ -47,7 +45,7 @@ func loadEnvironment() {
 			slog.Error("Error loading .env file", "error", err)
 			os.Exit(1)
 		}
-	} else {
+	} else if os.Getenv("APP_ENV") == "development" {
 		// Load .env.development file
 		err := godotenv.Load(".env.development")
 		if err != nil {
@@ -75,5 +73,4 @@ func printConfig(config *Config) {
 	fmt.Printf("DB User: %s\n", config.DBUser)
 	fmt.Printf("DB Password: %s\n", config.DBPassword)
 	fmt.Printf("API version: %s\n", config.APIVersion)
-	fmt.Printf("Token Secret: %s\n", config.TokenSecret)
 }

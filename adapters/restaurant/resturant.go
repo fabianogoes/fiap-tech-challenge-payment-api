@@ -12,8 +12,8 @@ import (
 type ClientAdapter struct {
 }
 
-func NewClientAdapter() *ClientAdapter {
-	return &ClientAdapter{}
+func NewClientAdapter() ClientAdapter {
+	return ClientAdapter{}
 }
 
 type PaymentWebhookRequest struct {

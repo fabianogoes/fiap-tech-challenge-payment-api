@@ -52,7 +52,7 @@ go mod tidy
 ### Running
 
 ```shell
-docker-compose up -d postgres && go run app/web/main.go
+docker-compose up -d mongo && go run app/web/main.go
 ```
 
 ## Testing using Docker/Docker Compose
@@ -60,31 +60,10 @@ docker-compose up -d postgres && go run app/web/main.go
 ```shell
 docker-compose up -d
 
-curl --request GET --url http://localhost:8080/health
+curl --request GET --url http://localhost:8010/health
 
 ## response 
 {"status":"UP"}
-```
-
-### Pre-registered data
-
-Quando a ‘app’ subir será inserido dados necessários para testar a criação de pedidos 
-
-Para verificar a **lista de produtos** pode ser usado a API:
-
-```shell
-http://localhost:8080/products
-```
-
-Para verificar a **lista de clientes** pode ser usado a API:
-
-```shell
-http://localhost:8080/customers
-```
-
-Para verificar a **lista de Atendentes** pode ser usado a API: 
-```shell
-http://localhost:8080/attendants
 ```
 
 ## Docker Commands
@@ -96,10 +75,16 @@ docker tag fabianogoes/payment-api:latest fabianogoes/payment-api:latest
 docker push fabianogoes/payment-api:latest
 ```
 
-## Run Go test
+## Run test
 
 ```shell
 go test -v ./...
+```
+
+## Run test with coverage
+
+```shell
+ go test -cover ./domain/usecases ./frameworks/rest/payment
 ```
 
 [0]: https://go.dev/

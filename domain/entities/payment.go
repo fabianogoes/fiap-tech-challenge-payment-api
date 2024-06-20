@@ -11,28 +11,10 @@ const (
 	PaymentStatusCanceled
 	PaymentStatusError
 	PaymentStatusNone
-	PaymentStatusUnknown
 )
 
 func (ps PaymentStatus) ToString() string {
 	return [...]string{"PENDING", "PAID", "REVERSED", "CANCELED", "ERROR", "NONE"}[ps]
-}
-
-func (ps PaymentStatus) ToPaymentStatus(status string) PaymentStatus {
-	switch status {
-	case "PENDING":
-		return PaymentStatusPending
-	case "PAID":
-		return PaymentStatusPaid
-	case "REVERSED":
-		return PaymentStatusReversed
-	case "CANCELED":
-		return PaymentStatusCanceled
-	case "ERROR":
-		return PaymentStatusError
-	default:
-		return PaymentStatusUnknown
-	}
 }
 
 type PaymentMethod int
