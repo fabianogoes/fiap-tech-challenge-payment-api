@@ -1,20 +1,8 @@
-# This workflow uses actions that are not certified by GitHub.
-# They are provided by a third-party and are governed by
-# separate terms of service, privacy policy, and support
-# documentation.
-
-# GitHub recommends pinning actions to a commit SHA.
-# To get a newer version, you will need to update the SHA.
-# You can also reference a tag or branch, but the action may change without warning.
-
-### References
-# kubectl apply -f kubernetes/service.yaml
-# IMAGE_TAG_OLD=$(kubectl get deployment my-deployment -o=jsonpath='{.spec.template.spec.containers[0].image}')
-# echo "::set-output name=image_tag_old::IMAGE_TAG_OLD"
-
-name: "CI/CD"
+name: CI
 
 on:
+  pull_request:
+    types: [opened, reopened, synchronize]
   push:
     branches:
       - main
@@ -68,36 +56,6 @@ jobs:
           push: true
           tags: ${{ steps.vars.outputs.docker_tag }}
 
-      - uses: gwatts/go-coverage-action@v2
-        id: coverage
-        with:
-          # Optional coverage threshold
-          # use fail-coverage to determine what should happen below this threshold
-          coverage-threshold: 80
-
-          # collect coverage for all packages beyond the one under test
-          cover-pkg: ./...
-
-          # Ignore code-generated files when calculating coverage totals
-          ignore-pattern: |
-            \.pb\.go$
-            \_string\.go$
-
-          # A url that the html report will be accessible at, once your
-          # workflow uploads it.  Used in the pull request comment.
-          report-url: https://artifacts.example.com/go-coverage/${{ github.ref_name}}.html
-
-      - name: Update coverage badge
-        uses: schneegans/dynamic-badges-action@v1.7.0
-        if: github.ref_name == 'main'
-        with:
-          auth: ${{ secrets.COVERAGE_GIST_SECRET }}
-          gistID: 788ds7a07299ab2728a33
-          filename: coverage.json
-          label: Go Coverage
-          message: ${{ steps.coverage.outputs.coverage-pct-1dp }}%
-          color: ${{ steps.coverage.outputs.meets-threshold == 'true' && 'green' || 'red' }}
-
       # - name: Configure AWS Credentials for GitHub Actions
       #   uses: aws-actions/configure-aws-credentials@v4
       #   with:
@@ -131,3 +89,38 @@ jobs:
       # - name: EKS apply service
       #   run: |
       #     kubectl apply -f ${{ env.EKS_DIRECTORY }}service.yaml
+
+  unit_tests:
+    name: "Unit tests"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: ^1.22
+
+      # When you execute your unit tests, make sure to use the "-coverprofile" flag to write a
+      # coverage profile to a file. You will need the name of the file (e.g. "coverage.txt")
+      # in the next step as well as the next job.
+      - name: Test
+        run: go test -cover -coverprofile=coverage.txt ./...
+
+      - name: Archive code coverage results
+        uses: actions/upload-artifact@v4
+        with:
+          name: code-coverage
+          path: coverage.txt # Make sure to use the same file name you chose for the "-coverprofile" in the "Test" step
+
+  code_coverage:
+    name: "Code coverage report"
+    if: github.event_name == 'pull_request' # Do not run when workflow is triggered by push to main branch
+    runs-on: ubuntu-latest
+    needs: unit_tests # Depends on the artifact uploaded by the "unit_tests" job
+    steps:
+      - uses: fgrosse/go-coverage-report@v1.0.2 # Consider using a Git revision for maximum security
+        with:
+          coverage-artifact-name: "code-coverage" # can be omitted if you used this default value
+          coverage-file-name: "coverage.txt" # can be omitted if you used this default value
