@@ -1,6 +1,6 @@
 # FIAP challenge - Payment
 
-[![Build](https://github.com/fabianogoes/fiap-tech-challenge-restaurant-api/actions/workflows/deploy.yml/badge.svg)](https://github.com/fabianogoes/fiap-tech-challenge-restaurant-api/actions/workflows/deploy.yml)
+[![CI](https://github.com/fabianogoes/fiap-tech-challenge-payment-api/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/fabianogoes/fiap-tech-challenge-payment-api/actions/workflows/ci-cd.yml)
 [![Codecov](https://codecov.io/github/fabianogoes/fiap-tech-challenge-payment-api/graph/badge.svg?token=877UONKJDB)](https://codecov.io/github/fabianogoes/fiap-tech-challenge-payment-api)
 
 ## Project Architecture by Clean Architecture
