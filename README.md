@@ -1,9 +1,9 @@
 # FIAP challenge - Payment
 
-[![CI](https://github.com/fabianogoes/fiap-tech-challenge-payment-api/actions/workflows/ci-cd.yml/badge.svg?event=status)](https://github.com/fabianogoes/fiap-tech-challenge-payment-api/actions/workflows/ci-cd.yml)
-[![Coverage](https://codecov.io/github/fabianogoes/fiap-tech-challenge-payment-api/graph/badge.svg?token=877UONKJDB)](https://codecov.io/github/fabianogoes/fiap-tech-challenge-payment-api)
+[![CI](https://github.com/fabianogoes/fiap-tech-challenge-payment-api/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/fabianogoes/fiap-tech-challenge-payment-api/actions/workflows/ci-cd.yml)
+[![Coverage Percent](https://codecov.io/github/fabianogoes/fiap-tech-challenge-payment-api/graph/badge.svg?token=877UONKJDB)](https://codecov.io/github/fabianogoes/fiap-tech-challenge-payment-api)
 
-[![Coverage](https://codecov.io/github/fabianogoes/fiap-tech-challenge-payment-api/graphs/sunburst.svg?token=877UONKJDB)](https://codecov.io/github/fabianogoes/fiap-tech-challenge-payment-api)
+[![Coverage Graph](https://codecov.io/github/fabianogoes/fiap-tech-challenge-payment-api/graphs/sunburst.svg?token=877UONKJDB)](https://codecov.io/github/fabianogoes/fiap-tech-challenge-payment-api)
 
 ## Project Architecture by Clean Architecture
 
