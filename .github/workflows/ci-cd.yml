@@ -30,7 +30,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       packages: write
-      contents: read
+      contents: write
       attestations: write
     steps:
       - name: Check out the repo
@@ -86,6 +86,17 @@ jobs:
           # A url that the html report will be accessible at, once your
           # workflow uploads it.  Used in the pull request comment.
           report-url: https://artifacts.example.com/go-coverage/${{ github.ref_name}}.html
+
+      - name: Update coverage badge
+        uses: schneegans/dynamic-badges-action@v1.7.0
+        if: github.ref_name == 'main'
+        with:
+          auth: ${{ secrets.COVERAGE_GIST_SECRET }}
+          gistID: 788ds7a07299ab2728a33
+          filename: coverage.json
+          label: Go Coverage
+          message: ${{ steps.coverage.outputs.coverage-pct-1dp }}%
+          color: ${{ steps.coverage.outputs.meets-threshold == 'true' && 'green' || 'red' }}
 
       # - name: Configure AWS Credentials for GitHub Actions
       #   uses: aws-actions/configure-aws-credentials@v4
