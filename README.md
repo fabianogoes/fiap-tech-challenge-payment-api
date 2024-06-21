@@ -2,6 +2,8 @@
 
 [![CI/CD](https://github.com/fabianogoes/fiap-tech-challenge-restaurant-api/actions/workflows/deploy.yml/badge.svg)](https://github.com/fabianogoes/fiap-tech-challenge-restaurant-api/actions/workflows/deploy.yml)
 
+[![codecov](https://codecov.io/github/fabianogoes/fiap-tech-challenge-payment-api/graph/badge.svg?token=877UONKJDB)](https://codecov.io/github/fabianogoes/fiap-tech-challenge-payment-api)
+
 ## Project Architecture by Clean Architecture
 
 - `app/web`: diretório para os principais pontos de entrada, injeção dependência ou comandos do aplicativo. O subdiretório ‘web’ contém o ponto de entrada principal a API REST.
