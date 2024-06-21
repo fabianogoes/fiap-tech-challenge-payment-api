@@ -12,7 +12,7 @@
 # IMAGE_TAG_OLD=$(kubectl get deployment my-deployment -o=jsonpath='{.spec.template.spec.containers[0].image}')
 # echo "::set-output name=image_tag_old::IMAGE_TAG_OLD"
 
-name: Deploy
+name: "CI/CD"
 
 on:
   push:
@@ -67,6 +67,25 @@ jobs:
           file: ./Dockerfile
           push: true
           tags: ${{ steps.vars.outputs.docker_tag }}
+
+      - uses: gwatts/go-coverage-action@v2
+        id: coverage
+        with:
+          # Optional coverage threshold
+          # use fail-coverage to determine what should happen below this threshold
+          coverage-threshold: 80
+
+          # collect coverage for all packages beyond the one under test
+          cover-pkg: ./...
+
+          # Ignore code-generated files when calculating coverage totals
+          ignore-pattern: |
+            \.pb\.go$
+            \_string\.go$
+
+          # A url that the html report will be accessible at, once your
+          # workflow uploads it.  Used in the pull request comment.
+          report-url: https://artifacts.example.com/go-coverage/${{ github.ref_name}}.html
 
       # - name: Configure AWS Credentials for GitHub Actions
       #   uses: aws-actions/configure-aws-credentials@v4
