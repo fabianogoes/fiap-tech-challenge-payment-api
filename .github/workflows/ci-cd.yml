@@ -12,7 +12,8 @@ env:
   EKS_DIRECTORY: .infra/kubernetes/
 
 jobs:
-  test:
+  deployment:
+    environment: production
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
@@ -41,19 +42,22 @@ jobs:
         run: go test -v ./...
 
       - name: Run tests with coverage
-        run: go test -coverprofile=coverage.out ./... &&  go tool cover -func=coverage.out
+        run: go test -coverprofile=coverage.out ./...
 
-      - name: Upload coverage report
-        uses: actions/upload-artifact@v2
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3
         with:
-          name: coverage-report
-          path: coverage.out
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: coverage.out
+          flags: unittests
+          name: codecov-umbrella
+          fail_ci_if_error: true
 
   build:
     name: Build Docker Image
     if: false
     runs-on: ubuntu-latest
-    needs: test
+    needs: deployment
     permissions:
       packages: write
       contents: write
