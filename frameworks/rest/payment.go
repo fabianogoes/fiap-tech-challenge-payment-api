@@ -1,4 +1,4 @@
-package payment
+package rest
 
 import (
 	"github.com/fabianogoes/fiap-payment/domain"

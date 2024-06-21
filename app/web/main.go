@@ -6,7 +6,6 @@ import (
 	"github.com/fabianogoes/fiap-payment/adapters/restaurant"
 	"github.com/fabianogoes/fiap-payment/domain/usecases"
 	"github.com/fabianogoes/fiap-payment/frameworks/repository"
-	"github.com/fabianogoes/fiap-payment/frameworks/rest/payment"
 	"log/slog"
 	"os"
 
@@ -51,7 +50,7 @@ func main() {
 	paymentRepository := repository.NewPaymentRepository(db)
 	restaurantAdapter := restaurant.NewClientAdapter()
 	paymentUseCase := usecases.NewPaymentService(paymentRepository, &restaurantAdapter)
-	paymentHandler := payment.NewPaymentHandler(paymentUseCase)
+	paymentHandler := rest.NewPaymentHandler(paymentUseCase)
 
 	router, err := rest.NewRouter(
 		paymentHandler,
