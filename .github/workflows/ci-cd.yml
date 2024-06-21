@@ -49,9 +49,9 @@ jobs:
         uses: actions/checkout@v4
 
       - uses: fgrosse/go-coverage-report@v1.0.2 # Consider using a Git revision for maximum security
-        with:
-          coverage-artifact-name: "code-coverage" # can be omitted if you used this default value
-          coverage-file-name: "coverage.txt" # can be omitted if you used this default value
+#        with:
+#          coverage-artifact-name: "code-coverage" # can be omitted if you used this default value
+#          coverage-file-name: "coverage.txt" # can be omitted if you used this default value
 
   build:
     name: Build Docker Image
