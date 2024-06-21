@@ -84,7 +84,7 @@ go test -v ./...
 ## Run test with coverage
 
 ```shell
- go test -cover ./domain/usecases ./frameworks/rest/payment
+ go test -coverprofile=coverage.out ./... &&  go tool cover -func=coverage.out
 ```
 
 [0]: https://go.dev/
