@@ -5,6 +5,8 @@
 
 [![Coverage Graph](https://codecov.io/github/fabianogoes/fiap-tech-challenge-payment-api/graphs/sunburst.svg?token=877UONKJDB)](https://codecov.io/github/fabianogoes/fiap-tech-challenge-payment-api)
 
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=fabianogoes_fiap-tech-challenge-payment-api&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=fabianogoes_fiap-tech-challenge-payment-api)
+
 ## Project Architecture by Clean Architecture
 
 - `app/web`: diretório para os principais pontos de entrada, injeção dependência ou comandos do aplicativo. O subdiretório ‘web’ contém o ponto de entrada principal a API REST.
