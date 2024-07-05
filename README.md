@@ -25,10 +25,13 @@
 - [x] [Domain-Driven Design][6]
 - [x] [Hexagonal Architecture][5]
 - [x] [Gin Web Framework][1] - Routes, JSON validation, Error management, Middleware support
-- [x] [PostgreSQL][3] - Database persistence
+- [x] [MongoDB][3] - Database persistence
 - [x] [GORM ORM library for Golang][2]
 - [x] [Slog](https://pkg.go.dev/log/slog) - Package slog provides structured logging, in which log records include a message, a severity level, and various other attributes expressed as key-value pairs. 
 - [x] [GoDotEnv](https://github.com/joho/godotenv) - A Go (golang) port of dotenv project (which loads env vars from a .env file).
+
+## Issues
+
 - [ ] [gin-swagger](https://github.com/swaggo/gin-swagger) - gin middleware to automatically generate RESTful API documentation with Swagger 2.0.
 - [ ] [swag](https://github.com/swaggo/swag) - Swag converts Go annotations to Swagger Documentation 2.0
 - [ ] [CORS gin's middleware](https://github.com/gin-contrib/cors) - Gin middleware/handler to enable CORS support.
@@ -94,6 +97,6 @@ go test -v ./...
 [0]: https://go.dev/
 [1]: https://gin-gonic.com/
 [2]: https://gorm.io/index.html
-[3]: https://www.postgresql.org/
+[3]: https://www.mongodb.com/
 [5]: https://alistair.cockburn.us/hexagonal-architecture/
 [6]: https://www.amazon.com/dp/0321125215?ref_=cm_sw_r_cp_ud_dp_0M66DHP14SJ5GBBJCRNP
