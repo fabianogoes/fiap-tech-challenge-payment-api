@@ -2,83 +2,143 @@ package usecases
 
 import (
 	"errors"
+	"fmt"
 	"github.com/fabianogoes/fiap-payment/domain"
 	"github.com/fabianogoes/fiap-payment/domain/entities"
-	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 	"testing"
+	"time"
+
+	. "github.com/onsi/ginkgo"
+	. "github.com/onsi/gomega"
 )
 
-func Test_PaymentGetPaymentCreditPaid(t *testing.T) {
-	paymentCreditPaid := domain.BuildPaymentCreditPaid()
-	paymentRepositoryMock := new(domain.PaymentRepositoryMock)
-	paymentRepositoryMock.On("GetPaymentById", mock.Anything).Return(paymentCreditPaid, nil)
-
-	service := NewPaymentService(paymentRepositoryMock, new(domain.ClientAdapterMock))
-
-	payment, err := service.GetPaymentById(mock.Anything)
-	assert.Nil(t, err)
-	assert.NotNil(t, payment)
-	assert.Equal(t, entities.PaymentMethodCreditCard, payment.Method)
-	assert.Equal(t, entities.PaymentStatusPaid, payment.Status)
-
-	paymentRepositoryMock.AssertExpectations(t)
+func TestPayment(t *testing.T) {
+	RegisterFailHandler(Fail)
+	RunSpecs(t, "Payment Suite")
 }
 
-func Test_CreatePayment(t *testing.T) {
-	paymentCreditPending := domain.BuildPaymentCreditPending()
-	paymentRepositoryMock := new(domain.PaymentRepositoryMock)
-	paymentRepositoryMock.On("CreatePayment", mock.Anything).Return(paymentCreditPending, nil)
+var _ = Describe("Payment", func() {
+	orderID := uint(1)
+	paymentDate := time.Now()
+	methodCreditCard := entities.PaymentMethodCreditCard.ToString()
+	paymentValue := 100.50
 
-	service := NewPaymentService(paymentRepositoryMock, new(domain.ClientAdapterMock))
+	Context("initially", func() {
+		paymentPending := entities.NewPayment(orderID, paymentDate, methodCreditCard, paymentValue)
+		repositoryMock := new(domain.PaymentRepositoryMock)
+		repositoryMock.On("CreatePayment", mock.Anything).Return(&paymentPending, nil)
+		useCase := NewPaymentService(repositoryMock, new(domain.RestaurantClientMock))
 
-	payment, err := service.CreatePayment(
-		paymentCreditPending.OrderID,
-		paymentCreditPending.Method.ToString(),
-		paymentCreditPending.Value,
-		paymentCreditPending.Date)
+		payment, err := useCase.CreatePayment(orderID, methodCreditCard, paymentValue, paymentDate)
 
-	assert.Nil(t, err)
-	assert.NotNil(t, payment)
-	assert.Equal(t, entities.PaymentMethodCreditCard, payment.Method)
-	assert.Equal(t, entities.PaymentStatusPending, payment.Status)
+		It("has no error on create payment", func() {
+			Expect(err).Should(BeNil())
+		})
 
-	paymentRepositoryMock.AssertExpectations(t)
-}
+		It("has id not be nil", func() {
+			Expect(payment.ID).Should(Not(BeNil()))
+		})
 
-func Test_UpdateSuccess(t *testing.T) {
-	paymentCreditPaid := domain.BuildPaymentCreditPaid()
-	paymentRepositoryMock := new(domain.PaymentRepositoryMock)
-	paymentRepositoryMock.On("GetPaymentById", mock.Anything).Return(paymentCreditPaid, nil)
-	paymentRepositoryMock.On("UpdateStatus", mock.Anything, mock.Anything).Return(paymentCreditPaid, nil)
+		It(fmt.Sprintf("has order id %d", orderID), func() {
+			Expect(payment.OrderID).Should(Equal(orderID))
+		})
 
-	restaurantClientPort := new(domain.ClientAdapterMock)
-	restaurantClientPort.On("Webhook", mock.Anything, mock.Anything).Return(nil)
+		It(fmt.Sprintf("has paymentDate %v", paymentDate), func() {
+			Expect(payment.Date).Should(Equal(paymentDate))
+		})
 
-	service := NewPaymentService(paymentRepositoryMock, restaurantClientPort)
+		It(fmt.Sprintf("has methodCreditCard %s", methodCreditCard), func() {
+			Expect(payment.Method.ToString()).Should(Equal(methodCreditCard))
+		})
 
-	payment, err := service.UpdatePayment(mock.Anything, mock.Anything)
+		It(fmt.Sprintf("has paymentValue %v", paymentValue), func() {
+			Expect(payment.Value).Should(Equal(paymentValue))
+		})
 
-	assert.Nil(t, err)
-	assert.NotNil(t, payment)
-	assert.Equal(t, paymentCreditPaid, payment)
+		It(fmt.Sprintf("has status %v", entities.PaymentStatusPending), func() {
+			Expect(payment.Status).Should(Equal(entities.PaymentStatusPending))
+		})
 
-	paymentRepositoryMock.AssertExpectations(t)
-}
+		It("has createdAt not be nil", func() {
+			Expect(payment.CreatedAt).Should(Not(BeNil()))
+		})
+	})
 
-func Test_UpdatePaymentNotFound(t *testing.T) {
-	paymentRepositoryMock := new(domain.PaymentRepositoryMock)
-	errNoDocumentsResult := errors.New("mongo: no documents in result")
-	paymentID := domain.PaymentIdFail
-	paymentRepositoryMock.On("GetPaymentById", paymentID).Return(nil, errNoDocumentsResult)
+	Context("get payment with paid status", func() {
+		paymentCreditPaid := entities.NewPayment(orderID, paymentDate, methodCreditCard, paymentValue)
+		paymentCreditPaid.ID = domain.PaymentIdSuccess
+		paymentCreditPaid.Status = entities.PaymentStatusPaid
 
-	service := NewPaymentService(paymentRepositoryMock, new(domain.ClientAdapterMock))
+		repositoryMock := new(domain.PaymentRepositoryMock)
+		repositoryMock.On("GetPaymentById", paymentCreditPaid.ID).Return(&paymentCreditPaid, nil)
+		useCase := NewPaymentService(repositoryMock, new(domain.RestaurantClientMock))
 
-	payment, err := service.UpdatePayment(paymentID, entities.PaymentStatusPaid.ToString())
+		payment, err := useCase.GetPaymentById(mock.Anything)
 
-	assert.NotNil(t, err)
-	assert.Nil(t, payment)
-	assert.Equal(t, errNoDocumentsResult, err)
+		It("has no error on get payment", func() {
+			Expect(err).Should(BeNil())
+		})
 
-	paymentRepositoryMock.AssertExpectations(t)
-}
+		It("has not nil payment", func() {
+			Expect(payment).ShouldNot(BeNil())
+		})
+
+		It(fmt.Sprintf("has payment methodCreditCard %s", paymentCreditPaid.Method.ToString()), func() {
+			Expect(payment.Method.ToString()).Should(Equal(methodCreditCard))
+		})
+
+		It(fmt.Sprintf("has status %s", paymentCreditPaid.Status.ToString()), func() {
+			Expect(payment.Status).Should(Equal(paymentCreditPaid.Status))
+		})
+
+	})
+
+	Context("update payment to paid", func() {
+		paymentCreditPaid := entities.NewPayment(orderID, paymentDate, methodCreditCard, paymentValue)
+		paymentCreditPaid.Status = entities.PaymentStatusPaid
+
+		repositoryMock := new(domain.PaymentRepositoryMock)
+		repositoryMock.On("GetPaymentById", mock.Anything).Return(&paymentCreditPaid, nil)
+		repositoryMock.On("UpdateStatus", mock.Anything, mock.Anything).Return(&paymentCreditPaid, nil)
+		restaurantClientMock := new(domain.RestaurantClientMock)
+		useCase := NewPaymentService(repositoryMock, restaurantClientMock)
+
+		restaurantClientMock.On("Webhook", mock.Anything, mock.Anything).Return(nil)
+		payment, err := useCase.UpdatePayment(mock.Anything, mock.Anything)
+
+		It("has no error on update payment", func() {
+			Expect(err).Should(BeNil())
+		})
+
+		It("has not nil payment", func() {
+			Expect(payment).ShouldNot(BeNil())
+		})
+
+		It(fmt.Sprintf("has status %s", paymentCreditPaid.Status.ToString()), func() {
+			Expect(payment.Status).Should(Equal(paymentCreditPaid.Status))
+		})
+	})
+
+	Context("update payment not found error", func() {
+		statusPaid := entities.PaymentStatusPaid.ToString()
+
+		repositoryMock := new(domain.PaymentRepositoryMock)
+		repositoryMock.
+			On("GetPaymentById", mock.Anything).
+			Return(nil, errors.New("mongo: no documents in result"))
+
+		useCase := NewPaymentService(repositoryMock, new(domain.RestaurantClientMock))
+		payment, err := useCase.UpdatePayment(domain.PaymentIdFail, statusPaid)
+
+		It("has error on update payment not found", func() {
+			Expect(err).ShouldNot(BeNil())
+		})
+
+		It("has not nil payment", func() {
+			Expect(payment).Should(BeNil())
+		})
+
+	})
+
+})
