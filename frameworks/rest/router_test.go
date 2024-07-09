@@ -8,7 +8,7 @@ import (
 )
 
 func Test_Router(t *testing.T) {
-	paymentService := usecases.NewPaymentService(new(domain.PaymentRepositoryMock), new(domain.ClientAdapterMock))
+	paymentService := usecases.NewPaymentService(new(domain.PaymentRepositoryMock), new(domain.RestaurantClientMock))
 	paymentHandler := NewPaymentHandler(paymentService)
 	router, err := NewRouter(paymentHandler)
 	assert.Nil(t, err)

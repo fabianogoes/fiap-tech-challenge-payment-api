@@ -24,7 +24,7 @@ func Test_GetPaymentByIdPaid(t *testing.T) {
 	paymentRepositoryMock := new(domain.PaymentRepositoryMock)
 	paymentRepositoryMock.On("GetPaymentById", paymentPaid.ID).Return(paymentPaid, nil)
 
-	restaurantAdapterMock := new(domain.ClientAdapterMock)
+	restaurantAdapterMock := new(domain.RestaurantClientMock)
 	paymentUseCase := usecases.NewPaymentService(paymentRepositoryMock, restaurantAdapterMock)
 	paymentHandler := NewPaymentHandler(paymentUseCase)
 
@@ -52,7 +52,7 @@ func Test_GetPaymentByIdPaid(t *testing.T) {
 func Test_GetPaymentByIdFail(t *testing.T) {
 	paymentRepositoryMock := new(domain.PaymentRepositoryMock)
 	paymentRepositoryMock.On("GetPaymentById", domain.PaymentIdFail).Return(nil, errors.New("payment not found"))
-	paymentUseCase := usecases.NewPaymentService(paymentRepositoryMock, new(domain.ClientAdapterMock))
+	paymentUseCase := usecases.NewPaymentService(paymentRepositoryMock, new(domain.RestaurantClientMock))
 	paymentHandler := NewPaymentHandler(paymentUseCase)
 
 	r := frameworks.Setup()
@@ -72,7 +72,7 @@ func Test_CreatePaymentSuccess(t *testing.T) {
 	paymentRepositoryMock := new(domain.PaymentRepositoryMock)
 	paymentRepositoryMock.On("CreatePayment", mock.Anything).Return(paymentPaid, nil)
 
-	restaurantAdapterMock := new(domain.ClientAdapterMock)
+	restaurantAdapterMock := new(domain.RestaurantClientMock)
 	paymentUseCase := usecases.NewPaymentService(paymentRepositoryMock, restaurantAdapterMock)
 	paymentHandler := NewPaymentHandler(paymentUseCase)
 
@@ -119,7 +119,7 @@ func Test_CreatePaymentFail(t *testing.T) {
 	paymentRepositoryMock := new(domain.PaymentRepositoryMock)
 	paymentRepositoryMock.On("CreatePayment", mock.Anything).Return(nil, errNoDocumentsResult)
 
-	restaurantAdapterMock := new(domain.ClientAdapterMock)
+	restaurantAdapterMock := new(domain.RestaurantClientMock)
 	paymentUseCase := usecases.NewPaymentService(paymentRepositoryMock, restaurantAdapterMock)
 	paymentHandler := NewPaymentHandler(paymentUseCase)
 
@@ -147,7 +147,7 @@ func Test_UpdatePaymentSuccess(t *testing.T) {
 	paymentRepositoryMock.On("GetPaymentById", paymentPaid.ID).Return(paymentPaid, nil)
 	paymentRepositoryMock.On("UpdateStatus", mock.Anything, mock.Anything).Return(paymentPaid, nil)
 
-	restaurantAdapterMock := new(domain.ClientAdapterMock)
+	restaurantAdapterMock := new(domain.RestaurantClientMock)
 	paymentUseCase := usecases.NewPaymentService(paymentRepositoryMock, restaurantAdapterMock)
 	paymentHandler := NewPaymentHandler(paymentUseCase)
 	newStatus := entities.PaymentStatusPaid.ToString()
@@ -179,7 +179,7 @@ func Test_UpdatePaymentFailNotFound(t *testing.T) {
 	paymentRepositoryMock := new(domain.PaymentRepositoryMock)
 	paymentRepositoryMock.On("GetPaymentById", mock.Anything).Return(nil, errPaymentNotFound)
 
-	paymentUseCase := usecases.NewPaymentService(paymentRepositoryMock, new(domain.ClientAdapterMock))
+	paymentUseCase := usecases.NewPaymentService(paymentRepositoryMock, new(domain.RestaurantClientMock))
 	paymentHandler := NewPaymentHandler(paymentUseCase)
 	newStatus := entities.PaymentStatusPaid.ToString()
 
