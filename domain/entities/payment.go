@@ -1,6 +1,9 @@
 package entities
 
-import "time"
+import (
+	"github.com/google/uuid"
+	"time"
+)
 
 type PaymentStatus int
 
@@ -56,4 +59,22 @@ type Payment struct {
 	Value       float64
 	CreatedAt   time.Time
 	UpdatedAt   time.Time
+}
+
+func NewPayment(
+	orderID uint,
+	date time.Time,
+	method string,
+	value float64,
+) Payment {
+	return Payment{
+		ID:        uuid.NewString(),
+		OrderID:   orderID,
+		Date:      date,
+		Method:    ToPaymentMethod(method),
+		Value:     value,
+		Status:    PaymentStatusPending,
+		CreatedAt: time.Now(),
+		UpdatedAt: time.Now(),
+	}
 }

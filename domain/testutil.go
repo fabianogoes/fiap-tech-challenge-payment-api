@@ -35,13 +35,6 @@ func BuildPayment() *entities.Payment {
 	}
 }
 
-func BuildPaymentCreditPending() *entities.Payment {
-	payment := *BuildPayment()
-	payment.Method = entities.PaymentMethodCreditCard
-	payment.Status = entities.PaymentStatusPending
-	return &payment
-}
-
 func BuildPaymentCreditPaid() *entities.Payment {
 	payment := *BuildPayment()
 	payment.Method = entities.PaymentMethodCreditCard
@@ -66,14 +59,11 @@ type PaymentRepositoryMock struct {
 }
 
 func (p *PaymentRepositoryMock) GetPaymentById(id string) (*entities.Payment, error) {
-	fmt.Printf("GetPaymentById: %s\n", id)
 	args := p.Called(id)
-
-	if id == PaymentIdFail {
-		return nil, args.Error(1)
+	if args.Get(0) != nil {
+		return args.Get(0).(*entities.Payment), args.Error(1)
 	}
-
-	return args.Get(0).(*entities.Payment), args.Error(1)
+	return nil, args.Error(1)
 }
 
 func (p *PaymentRepositoryMock) CreatePayment(payment *entities.Payment) (*entities.Payment, error) {
@@ -91,7 +81,7 @@ func (p *PaymentRepositoryMock) UpdateStatus(id string, status string) (*entitie
 	return nil, args.Error(1)
 }
 
-type ClientAdapterMock struct {
+type RestaurantClientMock struct {
 	mock.Mock
 }
 
@@ -101,7 +91,7 @@ type PaymentWebhookRequest struct {
 	ErrorReason   string `json:"errorReason,omitempty"`
 }
 
-func (p *ClientAdapterMock) Webhook(orderID uint, status string) error {
+func (p *RestaurantClientMock) Webhook(orderID uint, status string) error {
 	fmt.Printf("Sending webhook request for order %d with status %s\n", orderID, status)
 	return nil
 }
