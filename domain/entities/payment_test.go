@@ -30,13 +30,13 @@ func Test_PaymentMethod(t *testing.T) {
 }
 
 func Test_NewPayment(t *testing.T) {
-	id := uint(1010)
-	status := PaymentStatusPaid.ToString()
+	orderID := uint(1010)
+	method := PaymentMethodCreditCard.ToString()
 	date := time.Now()
 	value := 100.00
-	payment := NewPayment(id, date, status, value)
-	assert.Equal(t, id, payment.ID)
+	payment := NewPayment(orderID, date, method, value)
+	assert.Equal(t, orderID, payment.OrderID)
 	assert.Equal(t, date, payment.Date)
-	assert.Equal(t, status, payment.Status)
+	assert.Equal(t, method, payment.Method.ToString())
 	assert.Equal(t, value, payment.Value)
 }
