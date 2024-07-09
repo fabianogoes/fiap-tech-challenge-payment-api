@@ -32,7 +32,7 @@ var _ = Describe("Payment", func() {
 
 		payment, err := useCase.CreatePayment(orderID, methodCreditCard, paymentValue, paymentDate)
 
-		It("has no error on create payment", func() {
+		It("has no error on CreatePayment", func() {
 			Expect(err).Should(BeNil())
 		})
 
@@ -76,7 +76,7 @@ var _ = Describe("Payment", func() {
 
 		payment, err := useCase.GetPaymentById(mock.Anything)
 
-		It("has no error on get payment", func() {
+		It("has no error on GetPaymentById", func() {
 			Expect(err).Should(BeNil())
 		})
 
@@ -107,7 +107,7 @@ var _ = Describe("Payment", func() {
 		restaurantClientMock.On("Webhook", mock.Anything, mock.Anything).Return(nil)
 		payment, err := useCase.UpdatePayment(mock.Anything, mock.Anything)
 
-		It("has no error on update payment", func() {
+		It("has no error on UpdatePayment", func() {
 			Expect(err).Should(BeNil())
 		})
 
@@ -131,7 +131,7 @@ var _ = Describe("Payment", func() {
 		useCase := NewPaymentService(repositoryMock, new(domain.RestaurantClientMock))
 		payment, err := useCase.UpdatePayment(domain.PaymentIdFail, statusPaid)
 
-		It("has error on update payment not found", func() {
+		It("has error on UpdatePayment not found", func() {
 			Expect(err).ShouldNot(BeNil())
 		})
 
