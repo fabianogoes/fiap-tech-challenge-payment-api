@@ -1,11 +1,9 @@
 # FIAP challenge - Payment
 
 [![CI](https://github.com/fabianogoes/fiap-tech-challenge-payment-api/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/fabianogoes/fiap-tech-challenge-payment-api/actions/workflows/ci-cd.yml)
-[![Coverage Percent](https://codecov.io/github/fabianogoes/fiap-tech-challenge-payment-api/graph/badge.svg?token=877UONKJDB)](https://codecov.io/github/fabianogoes/fiap-tech-challenge-payment-api)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=fabianogoes_fiap-tech-challenge-payment-api&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=fabianogoes_fiap-tech-challenge-payment-api)
 [![Sonar Coverage](https://sonarcloud.io/api/project_badges/measure?project=fabianogoes_fiap-tech-challenge-payment-api&metric=coverage)](https://sonarcloud.io/summary/new_code?id=fabianogoes_fiap-tech-challenge-payment-api)
-
-[![Coverage Graph](https://codecov.io/github/fabianogoes/fiap-tech-challenge-payment-api/graphs/sunburst.svg?token=877UONKJDB)](https://codecov.io/github/fabianogoes/fiap-tech-challenge-payment-api)
+<img src="https://sonarcloud.io/images/project_badges/sonarcloud-white.svg" alt="Scanned on SonarCloud" height="20px" />
 
 ## Project Architecture by Clean Architecture
 

@@ -44,15 +44,6 @@ jobs:
       - name: Run tests with coverage
         run: go test -coverprofile=coverage.out ./...
 
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v3
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          files: coverage.out
-          flags: unittests
-          name: codecov-umbrella
-          fail_ci_if_error: true
-
       - name: SonarCloud Scan
         uses: sonarsource/sonarcloud-github-action@master
         env:
