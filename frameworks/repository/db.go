@@ -17,7 +17,7 @@ func InitDB(ctx context.Context, config *entities.Config) (*mongo.Database, erro
 		log.Fatal(err)
 	}
 
-	err = client.Ping(context.Background(), nil)
+	err = client.Ping(ctx, nil)
 	if err != nil {
 		log.Fatal("Error connecting to database", err)
 	}
