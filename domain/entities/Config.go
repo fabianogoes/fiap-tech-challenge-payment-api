@@ -36,8 +36,7 @@ func loadEnvironment() {
 		// Load .env file
 		err := godotenv.Load()
 		if err != nil {
-			slog.Error("Error loading .env file", "error", err)
-			os.Exit(1)
+			slog.Info("loading .env file not found")
 		}
 	} else if os.Getenv("APP_ENV") == "development" {
 		// Load .env.development file
