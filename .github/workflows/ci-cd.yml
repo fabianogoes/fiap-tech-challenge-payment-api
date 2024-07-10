@@ -126,18 +126,18 @@ jobs:
         with:
           kubeconfig: ${{ secrets.KUBECONFIG }}
 
-      - name: EKS apply secrets
-        run: |
-          kubectl apply -f ${{ env.EKS_DIRECTORY }}secrets.yaml
+      #- name: EKS apply secrets
+      #  run: |
+      #    kubectl apply -f ${{ env.EKS_DIRECTORY }}secrets.yaml
 
       - name: EKS apply deployment
         run: |
           # sed -i "s|image:.*|image: ${{ steps.vars.outputs.docker_tag }}|g" ${{ env.EKS_DIRECTORY }}deployment.yaml
           kubectl apply -f ${{ env.EKS_DIRECTORY }}deployment.yaml
 
-      - name: EKS apply hpa
-        run: |
-          kubectl apply -f ${{ env.EKS_DIRECTORY }}hpa.yaml
+      #- name: EKS apply hpa
+      #  run: |
+      #    kubectl apply -f ${{ env.EKS_DIRECTORY }}hpa.yaml
 
       - name: EKS apply service
         run: |
