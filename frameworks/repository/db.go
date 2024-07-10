@@ -10,13 +10,7 @@ import (
 )
 
 func InitDB(ctx context.Context, config *entities.Config) (*mongo.Database, error) {
-	uri := fmt.Sprintf("mongodb://%s:%s@%s:%s/",
-		config.DBUser,
-		config.DBPassword,
-		config.DBHost,
-		config.DBPort,
-	)
-	clientOptions := options.Client().ApplyURI(uri)
+	clientOptions := options.Client().ApplyURI(config.DBUri)
 	client, err := mongo.Connect(context.Background(), clientOptions)
 
 	if err != nil {

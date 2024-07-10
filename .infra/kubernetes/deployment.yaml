@@ -39,38 +39,18 @@ spec:
             - secretRef:
                 name: app-secret
           env:
-            - name: DB_HOST
+            - name: DB_URI
               valueFrom:
                 secretKeyRef:
                   name: app-secret
-                  key: DB_HOST
-            - name: DB_DATABASE
-              valueFrom:
-                secretKeyRef:
-                  name: app-secret
-                  key: POSTGRES_DB
-            - name: DB_USERNAME
-              valueFrom:
-                secretKeyRef:
-                  name: app-secret
-                  key: POSTGRES_USER
-            - name: DB_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: app-secret
-                  key: POSTGRES_PASSWORD
-            - name: TOKEN_SECRET
-              valueFrom:
-                secretKeyRef:
-                  name: app-secret
-                  key: TOKEN_SECRET
-            - name: DB_PORT
-              value: "5432"
+                  key: DB_URI
+            - name: DB_NAME
+              value: "tech_challenge_payment_db"
             - name: APP_ENV
               value: "production"
             - name: APP_PORT
-              value: ":8080"
+              value: ":8010"
             - name: API_VERSION
-              value: "2024.5.1.5"
+              value: "4.0"
       restartPolicy: Always
 
