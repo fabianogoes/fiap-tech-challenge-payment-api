@@ -5,16 +5,14 @@ import (
 	"github.com/joho/godotenv"
 	"log/slog"
 	"os"
+	"strings"
 )
 
 type Config struct {
 	Environment string
 	AppPort     string
-	DBHost      string
-	DBPort      string
+	DBUri       string
 	DBName      string
-	DBUser      string
-	DBPassword  string
 	APIVersion  string
 }
 
@@ -22,14 +20,11 @@ func NewConfig() (*Config, error) {
 	loadEnvironment()
 
 	config := &Config{
-		Environment: os.Getenv("APP_ENV"),
-		AppPort:     os.Getenv("APP_PORT"),
-		DBHost:      os.Getenv("DB_HOST"),
-		DBPort:      os.Getenv("DB_PORT"),
-		DBName:      os.Getenv("DB_DATABASE"),
-		DBUser:      os.Getenv("DB_USERNAME"),
-		DBPassword:  os.Getenv("DB_PASSWORD"),
-		APIVersion:  os.Getenv("API_VERSION"),
+		Environment: strings.TrimRight(os.Getenv("APP_ENV"), "\n\r"),
+		AppPort:     strings.TrimRight(os.Getenv("APP_PORT"), "\n\r"),
+		DBUri:       strings.TrimRight(os.Getenv("DB_URI"), "\n\r"),
+		DBName:      strings.TrimRight(os.Getenv("DB_NAME"), "\n\r"),
+		APIVersion:  strings.TrimRight(os.Getenv("API_VERSION"), "\n\r"),
 	}
 
 	printConfig(config)
@@ -54,11 +49,8 @@ func loadEnvironment() {
 	} else {
 		_ = os.Setenv("APP_ENV", "default")
 		_ = os.Setenv("APP_PORT", ":8010")
-		_ = os.Setenv("DB_HOST", "localhost")
-		_ = os.Setenv("DB_PORT", "27017")
-		_ = os.Setenv("DB_DATABASE", "payment_db")
-		_ = os.Setenv("DB_USERNAME", "root")
-		_ = os.Setenv("DB_PASSWORD", "pass")
+		_ = os.Setenv("DB_URI", "mongodb://<USER>:<PASSWORD>@localhost:27017/")
+		_ = os.Setenv("DB_NAME", "tech_challenge_db")
 		_ = os.Setenv("API_VERSION", "1.0")
 	}
 
@@ -68,10 +60,7 @@ func printConfig(config *Config) {
 	fmt.Println("*** Environments ***")
 	fmt.Printf("Environment: %s\n", config.Environment)
 	fmt.Printf("App Port: %s\n", config.AppPort)
-	fmt.Printf("DB Host: %s\n", config.DBHost)
-	fmt.Printf("DB Port: %s\n", config.DBPort)
+	fmt.Printf("DB Host: %s\n", config.DBUri)
 	fmt.Printf("DB Name: %s\n", config.DBName)
-	fmt.Printf("DB User: %s\n", config.DBUser)
-	fmt.Printf("DB Password: %s\n", config.DBPassword)
 	fmt.Printf("API version: %s\n", config.APIVersion)
 }
