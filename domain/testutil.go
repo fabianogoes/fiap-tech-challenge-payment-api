@@ -2,10 +2,11 @@ package domain
 
 import (
 	"fmt"
+	"time"
+
 	"github.com/fabianogoes/fiap-payment/domain/entities"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/mock"
-	"time"
 )
 
 var PaymentIdSuccess = uuid.NewString()
@@ -76,7 +77,7 @@ func (p *PaymentRepositoryMock) CreatePayment(payment *entities.Payment) (*entit
 	return args.Get(0).(*entities.Payment), args.Error(1)
 }
 
-func (p *PaymentRepositoryMock) UpdateStatus(id string, status string) (*entities.Payment, error) {
+func (p *PaymentRepositoryMock) UpdateStatus(id string, status string, method string) (*entities.Payment, error) {
 	args := p.Called(id, status)
 	return nil, args.Error(1)
 }
@@ -91,7 +92,7 @@ type PaymentWebhookRequest struct {
 	ErrorReason   string `json:"errorReason,omitempty"`
 }
 
-func (p *RestaurantClientMock) Webhook(orderID uint, status string) error {
+func (p *RestaurantClientMock) Webhook(orderID uint, status string, method string) error {
 	fmt.Printf("Sending webhook request for order %d with status %s\n", orderID, status)
 	return nil
 }

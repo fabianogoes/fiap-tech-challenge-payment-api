@@ -21,7 +21,7 @@ func NewRouter(
 	{
 		payments.GET("/:id", paymentHandler.GetPayment)
 		payments.POST("/", paymentHandler.CreatePayment)
-		payments.POST("/:id/status", paymentHandler.UpdateStatus)
+		payments.PUT("/:id/status", paymentHandler.UpdateStatus)
 	}
 
 	return &Router{

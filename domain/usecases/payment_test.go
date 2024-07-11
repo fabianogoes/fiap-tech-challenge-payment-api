@@ -3,11 +3,12 @@ package usecases
 import (
 	"errors"
 	"fmt"
+	"testing"
+	"time"
+
 	"github.com/fabianogoes/fiap-payment/domain"
 	"github.com/fabianogoes/fiap-payment/domain/entities"
 	"github.com/stretchr/testify/mock"
-	"testing"
-	"time"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
@@ -105,7 +106,7 @@ var _ = Describe("Payment", func() {
 		useCase := NewPaymentService(repositoryMock, restaurantClientMock)
 
 		restaurantClientMock.On("Webhook", mock.Anything, mock.Anything).Return(nil)
-		payment, err := useCase.UpdatePayment(mock.Anything, mock.Anything)
+		payment, err := useCase.UpdatePayment(mock.Anything, mock.Anything, mock.Anything)
 
 		It("has no error on UpdatePayment", func() {
 			Expect(err).Should(BeNil())
@@ -122,6 +123,7 @@ var _ = Describe("Payment", func() {
 
 	Context("update payment not found error", func() {
 		statusPaid := entities.PaymentStatusPaid.ToString()
+		methodCreditCard := entities.PaymentMethodCreditCard.ToString()
 
 		repositoryMock := new(domain.PaymentRepositoryMock)
 		repositoryMock.
@@ -129,7 +131,7 @@ var _ = Describe("Payment", func() {
 			Return(nil, errors.New("mongo: no documents in result"))
 
 		useCase := NewPaymentService(repositoryMock, new(domain.RestaurantClientMock))
-		payment, err := useCase.UpdatePayment(domain.PaymentIdFail, statusPaid)
+		payment, err := useCase.UpdatePayment(domain.PaymentIdFail, statusPaid, methodCreditCard)
 
 		It("has error on UpdatePayment not found", func() {
 			Expect(err).ShouldNot(BeNil())

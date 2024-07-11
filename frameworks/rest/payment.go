@@ -52,8 +52,9 @@ func (h *PaymentHandler) CreatePayment(c *gin.Context) {
 func (h *PaymentHandler) UpdateStatus(c *gin.Context) {
 	id := c.Param("id")
 	status := c.Query("status")
+	method := c.Query("method")
 
-	payment, err := h.UseCase.UpdatePayment(id, status)
+	payment, err := h.UseCase.UpdatePayment(id, status, method)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return

@@ -3,6 +3,7 @@ package repository
 import (
 	"context"
 	"fmt"
+
 	"github.com/fabianogoes/fiap-payment/domain/entities"
 	"github.com/fabianogoes/fiap-payment/frameworks/repository/dbo"
 	"go.mongodb.org/mongo-driver/bson"
@@ -52,9 +53,10 @@ func (p *PaymentRepository) CreatePayment(payment *entities.Payment) (*entities.
 	return paymentResponse, nil
 }
 
-func (p *PaymentRepository) UpdateStatus(id string, status string) (*entities.Payment, error) {
+func (p *PaymentRepository) UpdateStatus(id string, status string, method string) (*entities.Payment, error) {
 	update := bson.M{"$set": bson.M{
 		"status": status,
+		"method": method,
 	}}
 
 	objID, err := primitive.ObjectIDFromHex(id)
