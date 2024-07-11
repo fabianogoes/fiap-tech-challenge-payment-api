@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"log"
 	"net/http"
 
@@ -35,19 +34,22 @@ func (p *ClientAdapter) Webhook(orderID uint, status string, method string) erro
 	fmt.Printf("PUT body: %s\n", string(postBody))
 
 	url := fmt.Sprintf("%s/orders/%d/payment/webhook", p.config.RestaurantApiUrl, orderID)
-	resp, err := http.NewRequest(http.MethodPut, url, bytes.NewBuffer(postBody))
-	if err != nil {
-		log.Fatalf("An Error Occured %v", err)
-	}
-	defer resp.Body.Close()
+	fmt.Printf("calling restaurant webhook url %s \n", url)
 
-	body, err := ioutil.ReadAll(resp.Body)
+	_, err := http.NewRequest(http.MethodPut, url, bytes.NewBuffer(postBody))
 	if err != nil {
-		log.Fatalln(err)
+		log.Fatalf("An Error Occured to call restaurant webhook %v", err)
+		return err
 	}
+	// defer resp.Body.Close()
 
-	sb := string(body)
-	log.Println(sb)
+	// body, err := ioutil.ReadAll(resp.Body)
+	// if err != nil {
+	// 	log.Fatalln(err)
+	// }
+
+	// sb := string(body)
+	// log.Println(sb)
 
 	return nil
 }
