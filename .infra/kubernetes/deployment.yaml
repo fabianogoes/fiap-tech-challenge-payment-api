@@ -37,12 +37,12 @@ spec:
               cpu: 1m
           envFrom:
             - secretRef:
-                name: app-secret
+                name: payment-secret
           env:
             - name: DB_URI
               valueFrom:
                 secretKeyRef:
-                  name: app-secret
+                  name: payment-secret
                   key: DB_URI
             - name: DB_NAME
               value: "tech_challenge_payment_db"
@@ -51,7 +51,7 @@ spec:
             - name: APP_NAME
               value: payment-api
             - name: APP_PORT
-              value: ":8010"
+              value: ":8080"
             - name: API_VERSION
               value: "4.0"
       restartPolicy: Always
