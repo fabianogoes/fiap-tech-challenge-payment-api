@@ -5,6 +5,10 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"net/http"
+	"net/http/httptest"
+	"testing"
+
 	"github.com/fabianogoes/fiap-payment/domain"
 	"github.com/fabianogoes/fiap-payment/domain/entities"
 	"github.com/fabianogoes/fiap-payment/domain/usecases"
@@ -12,9 +16,6 @@ import (
 	"github.com/fabianogoes/fiap-payment/frameworks/rest/dto"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
-	"net/http"
-	"net/http/httptest"
-	"testing"
 )
 
 var paymentPaid = domain.BuildPaymentCreditPaid()

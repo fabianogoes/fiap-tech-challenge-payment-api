@@ -29,14 +29,13 @@ func (p *ClientAdapter) Webhook(orderID uint, status string) error {
 	fmt.Printf("Payment webhook request for order %d status %s \n", orderID, status)
 
 	postBody, _ := json.Marshal(map[string]interface{}{
-		"status": status,
-		"method": status,
+		"status":        status,
+		"paymentMethod": status,
 	})
-	fmt.Printf("Post body: %s\n", string(postBody))
+	fmt.Printf("PUT body: %s\n", string(postBody))
 
-	responseBody := bytes.NewBuffer(postBody)
 	url := fmt.Sprintf("%s/orders/%d/payment/webhook", p.config.RestaurantApiUrl, orderID)
-	resp, err := http.Post(url, "application/json", responseBody)
+	resp, err := http.NewRequest(http.MethodPut, url, bytes.NewBuffer(postBody))
 	if err != nil {
 		log.Fatalf("An Error Occured %v", err)
 	}
