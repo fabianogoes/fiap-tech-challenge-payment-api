@@ -35,7 +35,7 @@ func (c *PaymentService) CreatePayment(orderID uint, method string, value float6
 }
 
 func (c *PaymentService) UpdatePayment(id string, status string, method string) (*entities.Payment, error) {
-	fmt.Printf("update payemnt id %s status %s method %s\n", id, status, method)
+	fmt.Printf("update payemnt id %s status %s method %s \n", id, status, method)
 	payment, err := c.GetPaymentById(id)
 	if err != nil {
 		return nil, err
@@ -51,6 +51,6 @@ func (c *PaymentService) UpdatePayment(id string, status string, method string) 
 		return nil, fmt.Errorf("error calling restaurant webhook: %v", err)
 	}
 
-	fmt.Printf("payment %s status %s method %s updated successfully", id, status, method)
+	fmt.Printf("payment %s status %s method %s updated successfully \n", id, status, method)
 	return payment, nil
 }
