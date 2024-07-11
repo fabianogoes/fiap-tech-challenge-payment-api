@@ -25,12 +25,12 @@ type PaymentWebhookRequest struct {
 	ErrorReason   string `json:"errorReason,omitempty"`
 }
 
-func (p *ClientAdapter) Webhook(orderID uint, status string) error {
-	fmt.Printf("Payment webhook request for order %d status %s \n", orderID, status)
+func (p *ClientAdapter) Webhook(orderID uint, status string, method string) error {
+	fmt.Printf("Payment webhook request for order %d status %s method %s \n", orderID, status, method)
 
 	postBody, _ := json.Marshal(map[string]interface{}{
 		"status":        status,
-		"paymentMethod": status,
+		"paymentMethod": method,
 	})
 	fmt.Printf("PUT body: %s\n", string(postBody))
 

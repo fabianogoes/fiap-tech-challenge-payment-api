@@ -1,9 +1,11 @@
 package usecases
 
 import (
+	"fmt"
+	"time"
+
 	"github.com/fabianogoes/fiap-payment/domain/entities"
 	"github.com/fabianogoes/fiap-payment/domain/ports"
-	"time"
 )
 
 type PaymentService struct {
@@ -32,21 +34,23 @@ func (c *PaymentService) CreatePayment(orderID uint, method string, value float6
 	return c.paymentRepository.CreatePayment(payment)
 }
 
-func (c *PaymentService) UpdatePayment(id string, status string) (*entities.Payment, error) {
+func (c *PaymentService) UpdatePayment(id string, status string, method string) (*entities.Payment, error) {
+	fmt.Printf("update payemnt id %s status %s method %s\n", id, status, method)
 	payment, err := c.GetPaymentById(id)
 	if err != nil {
 		return nil, err
 	}
 
-	_, err = c.paymentRepository.UpdateStatus(payment.ID, status)
+	_, err = c.paymentRepository.UpdateStatus(payment.ID, status, method)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("error updating payment status: %v", err)
 	}
 
-	err = c.restaurantClient.Webhook(payment.OrderID, status)
+	err = c.restaurantClient.Webhook(payment.OrderID, status, method)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("error calling restaurant webhook: %v", err)
 	}
 
+	fmt.Printf("payment %s status %s method %s updated successfully", id, status, method)
 	return payment, nil
 }

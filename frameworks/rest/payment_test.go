@@ -146,7 +146,7 @@ func Test_CreatePaymentFail(t *testing.T) {
 func Test_UpdatePaymentSuccess(t *testing.T) {
 	paymentRepositoryMock := new(domain.PaymentRepositoryMock)
 	paymentRepositoryMock.On("GetPaymentById", paymentPaid.ID).Return(paymentPaid, nil)
-	paymentRepositoryMock.On("UpdateStatus", mock.Anything, mock.Anything).Return(paymentPaid, nil)
+	paymentRepositoryMock.On("UpdateStatus", mock.Anything, mock.Anything, mock.Anything).Return(paymentPaid, nil)
 
 	restaurantAdapterMock := new(domain.RestaurantClientMock)
 	paymentUseCase := usecases.NewPaymentService(paymentRepositoryMock, restaurantAdapterMock)
