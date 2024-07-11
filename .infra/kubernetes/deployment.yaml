@@ -54,4 +54,6 @@ spec:
               value: ":8080"
             - name: API_VERSION
               value: "4.0"
+            - name: RESTAURANT_API_URL
+              value: "http://aefeb68552567485bab285db372d5b91-2128425875.us-east-1.elb.amazonaws.com:8080"
       restartPolicy: Always

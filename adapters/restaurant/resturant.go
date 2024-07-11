@@ -7,13 +7,16 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+
+	"github.com/fabianogoes/fiap-payment/domain/entities"
 )
 
 type ClientAdapter struct {
+	config *entities.Config
 }
 
-func NewClientAdapter() ClientAdapter {
-	return ClientAdapter{}
+func NewClientAdapter(config *entities.Config) ClientAdapter {
+	return ClientAdapter{config: config}
 }
 
 type PaymentWebhookRequest struct {
@@ -32,7 +35,7 @@ func (p *ClientAdapter) Webhook(orderID uint, status string) error {
 	fmt.Printf("Post body: %s\n", string(postBody))
 
 	responseBody := bytes.NewBuffer(postBody)
-	url := fmt.Sprintf("http://localhost:8080/orders/%d/payment/webhook", orderID)
+	url := fmt.Sprintf("%s/orders/%d/payment/webhook", p.config.RestaurantApiUrl, orderID)
 	resp, err := http.Post(url, "application/json", responseBody)
 	if err != nil {
 		log.Fatalf("An Error Occured %v", err)
@@ -45,7 +48,7 @@ func (p *ClientAdapter) Webhook(orderID uint, status string) error {
 	}
 
 	sb := string(body)
-	log.Printf(sb)
+	log.Println(sb)
 
 	return nil
 }

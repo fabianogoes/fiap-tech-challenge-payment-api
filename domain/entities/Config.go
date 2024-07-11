@@ -10,24 +10,26 @@ import (
 )
 
 type Config struct {
-	AppName     string
-	Environment string
-	AppPort     string
-	DBUri       string
-	DBName      string
-	APIVersion  string
+	AppName          string
+	Environment      string
+	AppPort          string
+	DBUri            string
+	DBName           string
+	APIVersion       string
+	RestaurantApiUrl string
 }
 
 func NewConfig() (*Config, error) {
 	loadEnvironment()
 
 	config := &Config{
-		AppName:     strings.TrimRight(os.Getenv("APP_NAME"), "\n\r"),
-		Environment: strings.TrimRight(os.Getenv("APP_ENV"), "\n\r"),
-		AppPort:     strings.TrimRight(os.Getenv("APP_PORT"), "\n\r"),
-		DBUri:       strings.TrimRight(os.Getenv("DB_URI"), "\n\r"),
-		DBName:      strings.TrimRight(os.Getenv("DB_NAME"), "\n\r"),
-		APIVersion:  strings.TrimRight(os.Getenv("API_VERSION"), "\n\r"),
+		AppName:          strings.TrimRight(os.Getenv("APP_NAME"), "\n\r"),
+		Environment:      strings.TrimRight(os.Getenv("APP_ENV"), "\n\r"),
+		AppPort:          strings.TrimRight(os.Getenv("APP_PORT"), "\n\r"),
+		DBUri:            strings.TrimRight(os.Getenv("DB_URI"), "\n\r"),
+		DBName:           strings.TrimRight(os.Getenv("DB_NAME"), "\n\r"),
+		APIVersion:       strings.TrimRight(os.Getenv("API_VERSION"), "\n\r"),
+		RestaurantApiUrl: strings.TrimRight(os.Getenv("RESTAURANT_API_URL"), "\n\r"),
 	}
 
 	printConfig(config)
@@ -55,6 +57,7 @@ func loadEnvironment() {
 		_ = os.Setenv("DB_URI", "mongodb://<USER>:<PASSWORD>@localhost:27017/")
 		_ = os.Setenv("DB_NAME", "tech_challenge_payment_db")
 		_ = os.Setenv("API_VERSION", "4.0")
+		_ = os.Setenv("RESTAURANT_API_URL", "http://localhost:8080")
 	}
 
 }
@@ -67,4 +70,5 @@ func printConfig(config *Config) {
 	fmt.Printf("DB DBUri: %s\n", config.DBUri)
 	fmt.Printf("DB Name: %s\n", config.DBName)
 	fmt.Printf("API version: %s\n", config.APIVersion)
+	fmt.Printf("Restaurant Api URL: %s\n", config.RestaurantApiUrl)
 }
