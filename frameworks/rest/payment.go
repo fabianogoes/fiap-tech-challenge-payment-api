@@ -64,6 +64,11 @@ func (h *PaymentHandler) CreatePayment(c *gin.Context) {
 	}
 
 	dateTime, err := time.Parse(domain.JsonDateTimeLayout, request.Date)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
 	payment, err := h.UseCase.CreatePayment(request.OrderID, request.Method, request.Value, dateTime)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
@@ -79,6 +84,35 @@ func (h *PaymentHandler) UpdateStatus(c *gin.Context) {
 	method := c.Query("method")
 
 	payment, err := h.UseCase.UpdatePayment(id, status, method)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, dto.ToPaymentResponse(payment))
+}
+
+func (h *PaymentHandler) UpdateStatusByOrderId(c *gin.Context) {
+	orderID, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	status := c.Query("status")
+	method := c.Query("method")
+
+	order, err := h.UseCase.GetPaymentByOrderId(uint(orderID))
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	payment, err := h.UseCase.UpdatePayment(order.ID, status, method)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
