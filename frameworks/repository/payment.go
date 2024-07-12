@@ -2,7 +2,7 @@ package repository
 
 import (
 	"context"
-	"fmt"
+	"log"
 
 	"github.com/fabianogoes/fiap-payment/domain/entities"
 	"github.com/fabianogoes/fiap-payment/frameworks/repository/dbo"
@@ -36,6 +36,18 @@ func (p *PaymentRepository) GetPaymentById(id string) (*entities.Payment, error)
 	return payment.ToEntity(), nil
 }
 
+func (or *PaymentRepository) GetPaymentByOrderId(id uint) (*entities.Payment, error) {
+	log.Default().Printf("GetPaymentByOrderId orderID: %d \n", id)
+	var order dbo.Payment
+
+	err := or.collection.FindOne(context.Background(), bson.M{"orderID": int(id)}).Decode(&order)
+	if err != nil {
+		return nil, err
+	}
+
+	return order.ToEntity(), nil
+}
+
 func (p *PaymentRepository) CreatePayment(payment *entities.Payment) (*entities.Payment, error) {
 	paymentCreate := dbo.ToPaymentDBO(payment)
 
@@ -54,6 +66,7 @@ func (p *PaymentRepository) CreatePayment(payment *entities.Payment) (*entities.
 }
 
 func (p *PaymentRepository) UpdateStatus(id string, status string, method string) (*entities.Payment, error) {
+	log.Printf("update payemnt id %s status %s method %s \n", id, status, method)
 	update := bson.M{"$set": bson.M{
 		"status": status,
 		"method": method,
@@ -63,9 +76,10 @@ func (p *PaymentRepository) UpdateStatus(id string, status string, method string
 	if err != nil {
 		panic(err)
 	}
+	log.Printf("update payemnt objID %v \n", objID)
 
-	one, err := p.collection.UpdateOne(context.Background(), bson.M{"_id": objID}, update)
-	fmt.Printf("Update one %v\n", one)
+	updated, err := p.collection.UpdateOne(context.Background(), bson.M{"_id": objID}, update)
+	log.Printf("update payemnt updated %v \n", updated)
 	if err != nil {
 		return nil, err
 	}

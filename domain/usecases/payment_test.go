@@ -21,11 +21,11 @@ func TestPayment(t *testing.T) {
 
 var _ = Describe("Payment", func() {
 	orderID := uint(1)
-	paymentDate := time.Now()
 	methodCreditCard := entities.PaymentMethodCreditCard.ToString()
 	paymentValue := 100.50
 
 	Context("initially", func() {
+		paymentDate := time.Now()
 		paymentPending := entities.NewPayment(orderID, paymentDate, methodCreditCard, paymentValue)
 		repositoryMock := new(domain.PaymentRepositoryMock)
 		repositoryMock.On("CreatePayment", mock.Anything).Return(&paymentPending, nil)
@@ -67,6 +67,7 @@ var _ = Describe("Payment", func() {
 	})
 
 	Context("get payment with paid status", func() {
+		paymentDate := time.Now()
 		paymentCreditPaid := entities.NewPayment(orderID, paymentDate, methodCreditCard, paymentValue)
 		paymentCreditPaid.ID = domain.PaymentIdSuccess
 		paymentCreditPaid.Status = entities.PaymentStatusPaid
@@ -96,17 +97,21 @@ var _ = Describe("Payment", func() {
 	})
 
 	Context("update payment to paid", func() {
+		paymentDate := time.Now()
 		paymentCreditPaid := entities.NewPayment(orderID, paymentDate, methodCreditCard, paymentValue)
 		paymentCreditPaid.Status = entities.PaymentStatusPaid
 
 		repositoryMock := new(domain.PaymentRepositoryMock)
 		repositoryMock.On("GetPaymentById", mock.Anything).Return(&paymentCreditPaid, nil)
-		repositoryMock.On("UpdateStatus", mock.Anything, mock.Anything).Return(&paymentCreditPaid, nil)
+		repositoryMock.On("UpdateStatus", mock.Anything, mock.Anything, mock.Anything).Return(&paymentCreditPaid, nil)
+
 		restaurantClientMock := new(domain.RestaurantClientMock)
+		restaurantClientMock.On("Webhook", mock.Anything, mock.Anything, mock.Anything).Return(nil)
+
 		useCase := NewPaymentService(repositoryMock, restaurantClientMock)
 
 		restaurantClientMock.On("Webhook", mock.Anything, mock.Anything).Return(nil)
-		payment, err := useCase.UpdatePayment(mock.Anything, mock.Anything, mock.Anything)
+		payment, err := useCase.UpdatePayment(paymentCreditPaid.ID, paymentCreditPaid.Status.ToString(), paymentCreditPaid.Method.ToString())
 
 		It("has no error on UpdatePayment", func() {
 			Expect(err).Should(BeNil())

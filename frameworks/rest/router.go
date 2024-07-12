@@ -20,8 +20,10 @@ func NewRouter(
 	payments := router.Group("/payments")
 	{
 		payments.GET("/:id", paymentHandler.GetPayment)
+		payments.GET("/order/:id", paymentHandler.GetPaymentByOrderId)
 		payments.POST("/", paymentHandler.CreatePayment)
 		payments.PUT("/:id/status", paymentHandler.UpdateStatus)
+		payments.PUT("/order/:id/status", paymentHandler.UpdateStatusByOrderId)
 	}
 
 	return &Router{
