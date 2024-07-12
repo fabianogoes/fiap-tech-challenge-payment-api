@@ -37,7 +37,7 @@ func (h *PaymentHandler) GetPayment(c *gin.Context) {
 }
 
 func (h *PaymentHandler) GetPaymentByOrderId(c *gin.Context) {
-	log.Default().Println("GetPaymentByOrderId...")
+	log.Println("GetPaymentByOrderId...")
 	orderID, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{

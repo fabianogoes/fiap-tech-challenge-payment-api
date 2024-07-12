@@ -26,7 +26,7 @@ func (c *PaymentService) GetPaymentById(id string) (*entities.Payment, error) {
 }
 
 func (ks *PaymentService) GetPaymentByOrderId(id uint) (*entities.Payment, error) {
-	log.Default().Printf("GetPaymentByOrderId orderID: %d \n", id)
+	log.Printf("GetPaymentByOrderId orderID: %d \n", id)
 	return ks.paymentRepository.GetPaymentByOrderId(id)
 }
 
@@ -41,7 +41,7 @@ func (c *PaymentService) CreatePayment(orderID uint, method string, value float6
 }
 
 func (c *PaymentService) UpdatePayment(id string, status string, method string) (*entities.Payment, error) {
-	fmt.Printf("update payemnt id %s status %s method %s \n", id, status, method)
+	log.Printf("update payemnt id %s status %s method %s \n", id, status, method)
 	payment, err := c.GetPaymentById(id)
 	if err != nil {
 		return nil, err
@@ -57,6 +57,6 @@ func (c *PaymentService) UpdatePayment(id string, status string, method string) 
 		return nil, fmt.Errorf("error calling restaurant webhook: %v", err)
 	}
 
-	fmt.Printf("payment %s status %s method %s updated successfully \n", id, status, method)
+	log.Printf("payment %s status %s method %s updated successfully \n", id, status, method)
 	return updated, nil
 }
