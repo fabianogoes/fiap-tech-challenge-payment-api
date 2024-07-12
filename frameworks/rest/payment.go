@@ -1,12 +1,15 @@
 package rest
 
 import (
+	"log"
+	"net/http"
+	"strconv"
+	"time"
+
 	"github.com/fabianogoes/fiap-payment/domain"
 	"github.com/fabianogoes/fiap-payment/domain/ports"
 	"github.com/fabianogoes/fiap-payment/frameworks/rest/dto"
 	"github.com/gin-gonic/gin"
-	"net/http"
-	"time"
 )
 
 type PaymentHandler struct {
@@ -30,6 +33,27 @@ func (h *PaymentHandler) GetPayment(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, dto.ToPaymentResponse(payment))
+}
+
+func (h *PaymentHandler) GetByOrderId(c *gin.Context) {
+	log.Default().Println("GetByOrderId...")
+	orderID, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	order, err := h.UseCase.GetPaymentByOrderId(uint(orderID))
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, dto.ToPaymentResponse(order))
 }
 
 func (h *PaymentHandler) CreatePayment(c *gin.Context) {

@@ -2,6 +2,7 @@ package usecases
 
 import (
 	"fmt"
+	"log"
 	"time"
 
 	"github.com/fabianogoes/fiap-payment/domain/entities"
@@ -22,6 +23,11 @@ func NewPaymentService(rep ports.PaymentRepositoryPort, client ports.RestaurantC
 
 func (c *PaymentService) GetPaymentById(id string) (*entities.Payment, error) {
 	return c.paymentRepository.GetPaymentById(id)
+}
+
+func (ks *PaymentService) GetPaymentByOrderId(id uint) (*entities.Payment, error) {
+	log.Default().Printf("GetPaymentByOrderId orderID: %d \n", id)
+	return ks.paymentRepository.GetPaymentByOrderId(id)
 }
 
 func (c *PaymentService) CreatePayment(orderID uint, method string, value float64, date time.Time) (*entities.Payment, error) {

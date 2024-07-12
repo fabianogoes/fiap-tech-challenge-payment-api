@@ -3,6 +3,7 @@ package repository
 import (
 	"context"
 	"fmt"
+	"log"
 
 	"github.com/fabianogoes/fiap-payment/domain/entities"
 	"github.com/fabianogoes/fiap-payment/frameworks/repository/dbo"
@@ -34,6 +35,18 @@ func (p *PaymentRepository) GetPaymentById(id string) (*entities.Payment, error)
 	}
 
 	return payment.ToEntity(), nil
+}
+
+func (or *PaymentRepository) GetPaymentByOrderId(id uint) (*entities.Payment, error) {
+	log.Default().Printf("GetPaymentByOrderId orderID: %d \n", id)
+	var order dbo.Payment
+
+	err := or.collection.FindOne(context.Background(), bson.M{"orderId": int(id)}).Decode(&order)
+	if err != nil {
+		return nil, err
+	}
+
+	return order.ToEntity(), nil
 }
 
 func (p *PaymentRepository) CreatePayment(payment *entities.Payment) (*entities.Payment, error) {

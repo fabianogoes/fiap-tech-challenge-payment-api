@@ -67,6 +67,14 @@ func (p *PaymentRepositoryMock) GetPaymentById(id string) (*entities.Payment, er
 	return nil, args.Error(1)
 }
 
+func (p *PaymentRepositoryMock) GetPaymentByOrderId(id uint) (*entities.Payment, error) {
+	args := p.Called(id)
+	if args.Get(0) != nil {
+		return args.Get(0).(*entities.Payment), args.Error(1)
+	}
+	return nil, args.Error(1)
+}
+
 func (p *PaymentRepositoryMock) CreatePayment(payment *entities.Payment) (*entities.Payment, error) {
 	args := p.Called(payment)
 
