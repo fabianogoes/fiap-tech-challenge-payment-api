@@ -47,16 +47,16 @@ func (c *PaymentService) UpdatePayment(id string, status string, method string) 
 		return nil, err
 	}
 
-	_, err = c.paymentRepository.UpdateStatus(payment.ID, status, method)
+	updated, err := c.paymentRepository.UpdateStatus(payment.ID, status, method)
 	if err != nil {
 		return nil, fmt.Errorf("error updating payment status: %v", err)
 	}
 
-	err = c.restaurantClient.Webhook(payment.OrderID, status, method)
+	err = c.restaurantClient.Webhook(updated.OrderID, status, method)
 	if err != nil {
 		return nil, fmt.Errorf("error calling restaurant webhook: %v", err)
 	}
 
 	fmt.Printf("payment %s status %s method %s updated successfully \n", id, status, method)
-	return payment, nil
+	return updated, nil
 }

@@ -6,11 +6,12 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/fabianogoes/fiap-payment/domain"
 	"github.com/fabianogoes/fiap-payment/domain/ports"
 	"github.com/fabianogoes/fiap-payment/frameworks/rest/dto"
 	"github.com/gin-gonic/gin"
 )
+
+var JsonDateTimeLayout = "2006-01-02T15:04:05"
 
 type PaymentHandler struct {
 	UseCase ports.PaymentUseCasePort
@@ -63,7 +64,7 @@ func (h *PaymentHandler) CreatePayment(c *gin.Context) {
 		return
 	}
 
-	dateTime, err := time.Parse(domain.JsonDateTimeLayout, request.Date)
+	dateTime, err := time.Parse(JsonDateTimeLayout, request.Date)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
