@@ -81,6 +81,7 @@ func Test_CreatePaymentSuccess(t *testing.T) {
 		OrderID: paymentPaid.OrderID,
 		Method:  paymentPaid.Method.ToString(),
 		Value:   paymentPaid.Value,
+		Date:    paymentPaid.Date.Format(domain.JsonDateTimeLayout),
 	}
 	jsonRequest, _ := json.Marshal(createPaymentRequest)
 	readerRequest := bytes.NewReader(jsonRequest)
