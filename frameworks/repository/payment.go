@@ -41,7 +41,7 @@ func (or *PaymentRepository) GetPaymentByOrderId(id uint) (*entities.Payment, er
 	log.Default().Printf("GetPaymentByOrderId orderID: %d \n", id)
 	var order dbo.Payment
 
-	err := or.collection.FindOne(context.Background(), bson.M{"orderId": int(id)}).Decode(&order)
+	err := or.collection.FindOne(context.Background(), bson.M{"orderID": int(id)}).Decode(&order)
 	if err != nil {
 		return nil, err
 	}
