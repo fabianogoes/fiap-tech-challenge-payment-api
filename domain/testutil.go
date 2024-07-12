@@ -86,7 +86,10 @@ func (p *PaymentRepositoryMock) CreatePayment(payment *entities.Payment) (*entit
 }
 
 func (p *PaymentRepositoryMock) UpdateStatus(id string, status string, method string) (*entities.Payment, error) {
-	args := p.Called(id, status)
+	args := p.Called(id, status, method)
+	if args.Get(0) != nil {
+		return args.Get(0).(*entities.Payment), args.Error(1)
+	}
 	return nil, args.Error(1)
 }
 

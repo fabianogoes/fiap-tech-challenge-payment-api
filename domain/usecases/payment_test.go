@@ -1,6 +1,7 @@
 package usecases
 
 import (
+	"errors"
 	"fmt"
 	"testing"
 	"time"
@@ -106,45 +107,45 @@ var _ = Describe("Payment", func() {
 
 		restaurantClientMock := new(domain.RestaurantClientMock)
 		restaurantClientMock.On("Webhook", mock.Anything, mock.Anything, mock.Anything).Return(nil)
-		
+
 		useCase := NewPaymentService(repositoryMock, restaurantClientMock)
 
 		restaurantClientMock.On("Webhook", mock.Anything, mock.Anything).Return(nil)
-		_, err := useCase.UpdatePayment(mock.Anything, mock.Anything, mock.Anything)
+		payment, err := useCase.UpdatePayment(paymentCreditPaid.ID, paymentCreditPaid.Status.ToString(), paymentCreditPaid.Method.ToString())
 
 		It("has no error on UpdatePayment", func() {
 			Expect(err).Should(BeNil())
 		})
 
-		// It("has not nil payment", func() {
-		// 	Expect(payment).ShouldNot(BeNil())
-		// })
+		It("has not nil payment", func() {
+			Expect(payment).ShouldNot(BeNil())
+		})
 
-		// It(fmt.Sprintf("has status %s", paymentCreditPaid.Status.ToString()), func() {
-		// 	Expect(payment.Status).Should(Equal(paymentCreditPaid.Status))
-		// })
+		It(fmt.Sprintf("has status %s", paymentCreditPaid.Status.ToString()), func() {
+			Expect(payment.Status).Should(Equal(paymentCreditPaid.Status))
+		})
 	})
 
-	// Context("update payment not found error", func() {
-	// 	statusPaid := entities.PaymentStatusPaid.ToString()
-	// 	methodCreditCard := entities.PaymentMethodCreditCard.ToString()
+	Context("update payment not found error", func() {
+		statusPaid := entities.PaymentStatusPaid.ToString()
+		methodCreditCard := entities.PaymentMethodCreditCard.ToString()
 
-	// 	repositoryMock := new(domain.PaymentRepositoryMock)
-	// 	repositoryMock.
-	// 		On("GetPaymentById", mock.Anything).
-	// 		Return(nil, errors.New("mongo: no documents in result"))
+		repositoryMock := new(domain.PaymentRepositoryMock)
+		repositoryMock.
+			On("GetPaymentById", mock.Anything).
+			Return(nil, errors.New("mongo: no documents in result"))
 
-	// 	useCase := NewPaymentService(repositoryMock, new(domain.RestaurantClientMock))
-	// 	payment, err := useCase.UpdatePayment(domain.PaymentIdFail, statusPaid, methodCreditCard)
+		useCase := NewPaymentService(repositoryMock, new(domain.RestaurantClientMock))
+		payment, err := useCase.UpdatePayment(domain.PaymentIdFail, statusPaid, methodCreditCard)
 
-	// 	It("has error on UpdatePayment not found", func() {
-	// 		Expect(err).ShouldNot(BeNil())
-	// 	})
+		It("has error on UpdatePayment not found", func() {
+			Expect(err).ShouldNot(BeNil())
+		})
 
-	// 	It("has not nil payment", func() {
-	// 		Expect(payment).Should(BeNil())
-	// 	})
+		It("has not nil payment", func() {
+			Expect(payment).Should(BeNil())
+		})
 
-	// })
+	})
 
 })
